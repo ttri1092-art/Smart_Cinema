@@ -1,0 +1,176 @@
+@startuml
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+hide circle
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 50
+
+table(LoaiKhachHang) {
+  primary_key(maLoaiKhachHang)
+  --
+  noiDung
+  tyLeGiamGia
+}
+
+table(KhachHang) {
+  primary_key(maKhachHang)
+  --
+  hoTen
+  ngaySinh
+  diaChi
+  sdt
+  email
+  foreign_key(maLoaiKhachHang)
+}
+
+table(NhomNhanVien) {
+  primary_key(maNhomNV)
+  --
+  noiDung
+}
+
+table(NhanVien) {
+  primary_key(maNV)
+  --
+  hoTen
+  ngaySinh
+  diaChi
+  sdt
+  foreign_key(maNhomNV)
+}
+
+table(CalamViec) {
+  primary_key(maCa)
+  --
+  tenCa
+  thoiGian
+}
+
+table(QuanlyCalamviec) {
+  primary_key(maCa)
+  primary_key(maNV)
+  --
+  congViec
+}
+
+table(NhomPhim) {
+  primary_key(maNhomPhim)
+  --
+  tenNhomPhim
+  noiDung
+  phuPhi
+}
+
+table(Phim) {
+  primary_key(maPhim)
+  --
+  tenPhim
+  theLoai
+  giaCoBan
+  noiDung
+  foreign_key(maNhomPhim)
+}
+
+table(Rap) {
+  primary_key(maRap)
+  --
+  noiDung
+}
+
+table(Ghe) {
+  primary_key(maGhe)
+  --
+  loaiGhe
+  foreign_key(maRap)
+}
+
+table(LoaiVe) {
+  primary_key(maLoaiVe)
+  --
+  tenLoaiVe
+  mucGiamGia
+}
+
+table(Ve) {
+  primary_key(maVe)
+  --
+  giaCoBan
+  foreign_key(maLoaiVe)
+  foreign_key(maHoaDon)
+}
+
+table(HoaDon) {
+  primary_key(maHoaDon)
+  --
+  ngayLap
+  tongTien
+  trangThai
+  foreign_key(maNV)
+  foreign_key(maKhachHang)
+}
+
+table(Payment) {
+  primary_key(maThanhToan)
+  --
+  ngayLap
+  tongTien
+  phuongThuc
+  trangThai
+  foreign_key(maHoaDon)
+}
+
+table(DatVe) {
+  primary_key(maDatVe)
+  --
+  ngayDat
+  tongTien
+  foreign_key(maHoaDon)
+}
+
+table(ChiTietDatVe) {
+  primary_key(maPhim)
+  primary_key(maDatVe)
+  primary_key(maGhe)
+  --
+}
+
+table(ChiTietItemVe) {
+  primary_key(maHoaDon)
+  primary_key(maVe)
+  --
+  giaGoc
+  phuPhi
+  giamGiaVe
+  giamGiaKhachHang
+  thanhTien
+}
+
+' Các mối liên kết 1-N
+LoaiKhachHang ||--o{ KhachHang
+NhomNhanVien ||--o{ NhanVien
+NhomPhim ||--o{ Phim
+Rap ||--o{ Ghe
+LoaiVe ||--o{ Ve
+KhachHang ||--o{ HoaDon
+NhanVien ||--o{ HoaDon
+
+' Các mối liên kết 1-1
+HoaDon ||--|| Payment
+HoaDon ||--|| DatVe
+
+' Bảng trung gian giải quyết N-N
+CalamViec ||--o{ QuanlyCalamviec
+NhanVien ||--o{ QuanlyCalamviec
+
+DatVe ||--o{ ChiTietDatVe
+Ghe ||--o{ ChiTietDatVe
+Phim ||--o{ ChiTietDatVe
+
+HoaDon ||--o{ ChiTietItemVe
+Ve ||--o{ ChiTietItemVe
+
+@enduml

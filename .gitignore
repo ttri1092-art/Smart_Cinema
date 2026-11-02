@@ -1,0 +1,9 @@
+# Java
+*.class
+bin/
+out/
+.settings/
+
+# C#
+bin/
+obj/
